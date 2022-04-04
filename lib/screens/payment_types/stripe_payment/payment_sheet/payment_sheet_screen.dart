@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_integration_demo/common/app/app_methods.dart';
+import 'package:payment_integration_demo/common/constant/color_constant.dart';
+import 'package:payment_integration_demo/common/widget/common_elevated_button.dart';
+import 'package:payment_integration_demo/common/widget/text_form_fields.dart';
 import 'package:payment_integration_demo/model/customer_model.dart';
 import 'package:payment_integration_demo/rest_api/payment_sheet/rest_api.dart';
 
@@ -17,6 +20,16 @@ class PaymentSheetScreen extends StatefulWidget {
 }
 
 class PaymentSheetScreenState extends State<PaymentSheetScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController line1Controller = TextEditingController();
+  final TextEditingController line2Controller = TextEditingController();
+  final TextEditingController stateController = TextEditingController();
+  final TextEditingController postalCodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     logs('Current screen --> $runtimeType');
@@ -29,16 +42,58 @@ class PaymentSheetScreenState extends State<PaymentSheetScreen> {
         physics: const BouncingScrollPhysics(),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
-          ElevatedButton(
-            onPressed: () => paymentInitialize(),
-            child: const Text(
-              'Initialize payment',
-              style: TextStyle(
-                letterSpacing: 1,
-                wordSpacing: 2,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+          const SizedBox(height: 20),
+          const Text(
+            'Shipping details',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: ColorConstant.darkBlue,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(14),
+            margin: const EdgeInsets.symmetric(horizontal: 14),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(color: const Color(0XFFDDDDDD)),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Column(
+              children: [
+                nameTextFormField(nameController, 'Name'),
+                const SizedBox(height: 20),
+                emailTextFormField(emailController, 'Email address'),
+                const SizedBox(height: 20),
+                numberTextFormField(phoneNoController, 'Phone number',
+                    numLimit: 10),
+                const SizedBox(height: 20),
+                nameTextFormField(line1Controller, 'Line1',
+                    prefixIcon: Icons.home),
+                const SizedBox(height: 20),
+                nameTextFormField(line2Controller, 'Line2',
+                    prefixIcon: Icons.home),
+                const SizedBox(height: 20),
+                numberTextFormField(postalCodeController, 'Postal code',
+                    numLimit: 6, prefixIcon: Icons.local_post_office),
+                const SizedBox(height: 20),
+                nameTextFormField(cityController, 'City',
+                    prefixIcon: Icons.location_city),
+                const SizedBox(height: 20),
+                nameTextFormField(stateController, 'State',
+                    prefixIcon: Icons.apartment),
+                const SizedBox(height: 20),
+                nameTextFormField(countryController, 'Country',
+                    prefixIcon: Icons.flag),
+                const SizedBox(height: 20),
+                CommonElevatedButton(
+                  buttonName: 'Initialize payment',
+                  horizontalMargin: 0,
+                  onPressed: () => paymentInitialize(),
+                ),
+              ],
             ),
           ),
         ],
@@ -47,22 +102,21 @@ class PaymentSheetScreenState extends State<PaymentSheetScreen> {
   }
 
   Future<void> paymentInitialize() async {
-    logs('message --> ${widget.isCustomized}');
     CustomerModel customerModel = await RestServices().createCustomer();
     logs('CustomerModel --> ${customerModel.toJson()}');
     Map<String, dynamic> paymentModel =
         await RestServices().createPaymentIntents();
-    const billingDetails = BillingDetails(
-      email: 'email@stripe.com',
-      phone: '+48888000888',
-      name: 'Stripe demo',
+    final BillingDetails billingDetails = BillingDetails(
+      email: emailController.text,
+      phone: '+91${phoneNoController.text}',
+      name: nameController.text,
       address: Address(
-        city: 'Houston',
-        country: 'US',
-        line1: '1459  Circle Drive',
-        line2: '',
-        state: 'Texas',
-        postalCode: '77063',
+        city: cityController.text,
+        country: countryController.text,
+        line1: line1Controller.text,
+        line2: line2Controller.text,
+        state: stateController.text,
+        postalCode: postalCodeController.text,
       ),
     );
     await Stripe.instance.initPaymentSheet(
