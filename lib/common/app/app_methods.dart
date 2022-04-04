@@ -2,6 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:payment_integration_demo/common/constant/color_constant.dart';
 
+List<String> paymentMethods = ['Stripe payment'];
+List<String> paymentSheetType = [
+  'Direct initialize payment',
+  'Custom initialize payment'
+];
+
+// ---------------------------- Stripe keys ---------------------------- //
+const String stripePublishableKey =
+    'pk_test_51J5pgUSCwJ2aVJIWd3B5gzbqgZ7c2UXzen9dos81TGM2dhTvoKE36Kms6T47nG1BNVEaXM9x00XBul0PuH5toIpA00S06Dm3VO';
+const String stripeSecretKey =
+    'sk_test_51J5pgUSCwJ2aVJIWkyQJAinhlhYTIyt8mn7zeRd1wUfyvYr380O05QKkfIOGOfz1HzLU28nSTP7uEOy35awB5XVM002YDWD6Cf';
+
 void logs(String message) {
   if (kDebugMode) {
     print(message);

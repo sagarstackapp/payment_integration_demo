@@ -38,6 +38,12 @@ dependencies:
   # Image View
   flutter_svg: ^1.0.3
 
+  # Stripe Payment
+  flutter_stripe: ^2.4.0
+
+  # Fetch server data
+  http: ^0.13.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

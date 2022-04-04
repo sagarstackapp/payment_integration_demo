@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_integration_demo/common/app/app_methods.dart';
 import 'package:payment_integration_demo/common/constant/color_constant.dart';
 import 'package:payment_integration_demo/common/constant/string_constant.dart';
-import 'package:payment_integration_demo/screens/splash_screen.dart';
+import 'package:payment_integration_demo/screens/splash_screen/splash_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+  await Stripe.instance.applySettings();
   runApp(const MyApp());
 }
 
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(ColorConstant.darkBlue),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
             padding: MaterialStateProperty.all(
