@@ -27,7 +27,7 @@ showMessage(BuildContext context, String message,
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor:
-          isError ? ColorConstant.red.withOpacity(0.6) : backgroundColor,
+          isError ? ColorConstant.red.withOpacity(0.8) : backgroundColor,
       content: Text(
         message,
         style: TextStyle(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:payment_integration_demo/common/app/app_methods.dart';
@@ -12,12 +13,13 @@ class RestServices {
     'Content-Type': 'application/x-www-form-urlencoded'
   };
 
-  Future<CustomerModel> createCustomer() async {
+  Future<CustomerModel> createCustomer(
+      {@required String? name, @required String? email}) async {
     String url = '$baseUrl/customers';
     logs('Url --> $url');
     Map<String, String> body = {
-      'name': 'Sagar Anghan',
-      'email': 'sagaranghan.stackapp@gmail.com',
+      'name': name!,
+      'email': email!,
       'description': 'A new customer'
     };
     logs('Body --> $body');

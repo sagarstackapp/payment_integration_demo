@@ -102,39 +102,52 @@ class PaymentSheetScreenState extends State<PaymentSheetScreen> {
   }
 
   Future<void> paymentInitialize() async {
-    CustomerModel customerModel = await RestServices().createCustomer();
-    logs('CustomerModel --> ${customerModel.toJson()}');
-    Map<String, dynamic> paymentModel =
-        await RestServices().createPaymentIntents();
-    final BillingDetails billingDetails = BillingDetails(
-      email: emailController.text,
-      phone: '+91${phoneNoController.text}',
-      name: nameController.text,
-      address: Address(
-        city: cityController.text,
-        country: countryController.text,
-        line1: line1Controller.text,
-        line2: line2Controller.text,
-        state: stateController.text,
-        postalCode: postalCodeController.text,
-      ),
-    );
-    await Stripe.instance.initPaymentSheet(
-      paymentSheetParameters: SetupPaymentSheetParameters(
-        customFlow: widget.isCustomized,
-        customerId: customerModel.id.toString(),
-        paymentIntentClientSecret: paymentModel['client_secret'],
-        merchantDisplayName: 'JustSaagar Shop',
-        merchantCountryCode: 'IN',
-        billingDetails: billingDetails,
-        applePay: true,
-        googlePay: true,
-        style: ThemeMode.dark,
-      ),
-    );
-    await Stripe.instance.presentPaymentSheet();
-    if (widget.isCustomized) {
-      await Stripe.instance.confirmPaymentSheetPayment();
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        phoneNoController.text.isEmpty ||
+        cityController.text.isEmpty ||
+        countryController.text.isEmpty ||
+        line1Controller.text.isEmpty ||
+        line2Controller.text.isEmpty ||
+        stateController.text.isEmpty ||
+        postalCodeController.text.isEmpty) {
+      showMessage(context, 'Enter all values');
+    } else {
+      CustomerModel customerModel = await RestServices().createCustomer(
+          name: nameController.text, email: emailController.text);
+      logs('CustomerModel --> ${customerModel.toJson()}');
+      Map<String, dynamic> paymentModel =
+          await RestServices().createPaymentIntents();
+      final BillingDetails billingDetails = BillingDetails(
+        email: emailController.text,
+        phone: '+91${phoneNoController.text}',
+        name: nameController.text,
+        address: Address(
+          city: cityController.text,
+          country: countryController.text,
+          line1: line1Controller.text,
+          line2: line2Controller.text,
+          state: stateController.text,
+          postalCode: postalCodeController.text,
+        ),
+      );
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          customFlow: widget.isCustomized,
+          customerId: customerModel.id.toString(),
+          paymentIntentClientSecret: paymentModel['client_secret'],
+          merchantDisplayName: 'JustSaagar Shop',
+          merchantCountryCode: 'IN',
+          billingDetails: billingDetails,
+          applePay: true,
+          googlePay: true,
+          style: ThemeMode.dark,
+        ),
+      );
+      await Stripe.instance.presentPaymentSheet();
+      if (widget.isCustomized) {
+        await Stripe.instance.confirmPaymentSheetPayment();
+      }
     }
   }
 }
